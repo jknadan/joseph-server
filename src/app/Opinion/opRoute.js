@@ -1,5 +1,5 @@
 module.exports = function(app){
-    const opi = require('./oPController');
+    const opi = require('./opController');
     const jwtMiddleware = require('../../../config/jwtMiddleware');
 
     // 0. 테스트 API
