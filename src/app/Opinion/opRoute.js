@@ -8,8 +8,6 @@ module.exports = function(app){
     // 1. 의견 수렴 API
     app.post('/opinion', opi.getOpinion);
 
-
-
 };
 
 
