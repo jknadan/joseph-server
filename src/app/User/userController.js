@@ -26,6 +26,8 @@ exports.postUsers = async function (req, res) {
     /**
      * Body: email, password, nickname
      */
+
+    console.log(req.body);
     const {email, password, nickname} = req.body;
 
     // 빈 값 체크
