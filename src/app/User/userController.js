@@ -28,22 +28,61 @@ exports.postUsers = async function (req, res) {
      */
 
     console.log(req.body);
-    const {email, password, nickname} = req.body;
+    const {name, group, phone, ID, password} = req.body;
+    console.log(`${name}, ${group}, ${phone}, ${ID}, ${password}`);
 
     // 빈 값 체크
-    if (!email)
-        return res.send(response(baseResponse.SIGNUP_EMAIL_EMPTY));
+    if (!name)
+        return res.send(errResponse({ 
+            "isSuccess": false, 
+            "code": 0, 
+            "message":"이름을 입력해주세요" },));
+    if (!group) return res.send(errResponse({ 
+            "isSuccess": false, 
+            "code": 0, 
+            "message":"소속을 입력해주세요" },));
+    if (!phone) 
+        return res.send(errResponse({ 
+            "isSuccess": false, 
+            "code": 0, 
+            "message":"전화번호를 입력해주세요" },));
+    if (!ID) 
+        return res.send(errResponse({ 
+            "isSuccess": false, 
+            "code": 0, 
+            "message":"아이디를 입력해주세요" },));
+    if (!password) 
+        return res.send(errResponse({ 
+            "isSuccess": false, 
+            "code": 0, 
+            "message":"비밀번호를 입력해주세요" },));
+    
+    // 만약 name,ID,group,phone에서 특수문자가 있다면 특수문자 제거 Validation
+    const regExp = /[~!@#$%^&*()_+|<>?:{}]/;
 
-    // 길이 체크
-    if (email.length > 30)
-        return res.send(response(baseResponse.SIGNUP_EMAIL_LENGTH));
+    if (regExp.test(name))
+        return res.send(errResponse({ 
+            "isSuccess": false, 
+            "code": 0, 
+            "message":"이름에 특수문자를 포함할 수 없습니다." },));
 
-    // 형식 체크 (by 정규표현식)
-    if (!regexEmail.test(email))
-        return res.send(response(baseResponse.SIGNUP_EMAIL_ERROR_TYPE));
+    if (regExp.test(ID))
+        return res.send(errResponse({ 
+            "isSuccess": false, 
+            "code": 0, 
+            "message":"아이디에 특수문자를 포함할 수 없습니다." },));
 
-    // 기타 등등 - 추가하기
+    if (regExp.test(group))
+        return res.send(errResponse({ 
+            "isSuccess": false, 
+            "code": 0, 
+            "message":"소속에 특수문자를 포함할 수 없습니다." },));
 
+    if (regExp.test(phone))
+        return res.send(errResponse({ 
+            "isSuccess": false, 
+            "code": 0, 
+            "message":"전화번호에 특수문자를 포함할 수 없습니다." },));
 
     const signUpResponse = await userService.createUser(
         email,
