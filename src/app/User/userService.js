@@ -13,12 +13,17 @@ const {connect} = require("http2");
 
 // Service: Create, Update, Delete 비즈니스 로직 처리
 
-exports.createUser = async function (email, password, nickname) {
+exports.createUser = async function (name, group, phone, ID, password) {
     try {
-        // 이메일 중복 확인
-        const emailRows = await userProvider.emailCheck(email);
+
+        const userRows = await userProvider.userCheck(name);
+        if (userRows.length <= 0)
+        return errResponse()
+
+        // // 이메일 중복 확인
+        // const emailRows = await userProvider.emailCheck(email);
         if (emailRows.length > 0)
-            return errResponse(baseResponse.SIGNUP_REDUNDANT_EMAIL);
+            return errResponse({ "isSuccess": false, "code": 3001, "message":"중복된 이메일입니다." });
 
         // 비밀번호 암호화
         const hashedPassword = await crypto
