@@ -13,7 +13,7 @@ const {connect} = require("http2");
 
 // Service: Create, Update, Delete 비즈니스 로직 처리
 
-exports.createUser = async function (email, password, nickname) {
+exports.createUser = async function (name, group, phone, ID, password) {
     try {
         // 이메일 중복 확인
         const emailRows = await userProvider.emailCheck(email);

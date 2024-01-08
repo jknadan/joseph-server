@@ -24,7 +24,7 @@ exports.getTest = async function (req, res) {
 exports.postUsers = async function (req, res) {
 
     /**
-     * Body: email, password, nickname
+     * Body: name, group, phone, ID, password
      */
 
     console.log(req.body);
