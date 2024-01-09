@@ -16,14 +16,9 @@ const {connect} = require("http2");
 exports.createUser = async function (name, group, phone, ID, password) {
     try {
 
-        const userRows = await userProvider.userCheck(name);
-        if (userRows.length <= 0)
-        return errResponse()
-
-        // // 이메일 중복 확인
-        // const emailRows = await userProvider.emailCheck(email);
-        if (emailRows.length > 0)
-            return errResponse({ "isSuccess": false, "code": 3001, "message":"중복된 이메일입니다." });
+        // const userRows = await userProvider.userCheck(name);
+        // if (userRows.length <= 0)
+        // return errResponse({ "isSuccess": false, "code": 0, "message":"이미 가입한 정보입니다" })
 
         // 비밀번호 암호화
         const hashedPassword = await crypto
@@ -31,19 +26,23 @@ exports.createUser = async function (name, group, phone, ID, password) {
             .update(password)
             .digest("hex");
 
-        const insertUserInfoParams = [email, hashedPassword, nickname];
+        const insertUserInfoParams = [name, ID,hashedPassword, phone, group];
 
         const connection = await pool.getConnection(async (conn) => conn);
 
         const userIdResult = await userDao.insertUserInfo(connection, insertUserInfoParams);
         console.log(`추가된 회원 : ${userIdResult[0].insertId}`)
         connection.release();
-        return response(baseResponse.SUCCESS);
+        return response({ "isSuccess": true, "code": 1, "message":"회원가입에 성공하였습니다." });
 
 
     } catch (err) {
         logger.error(`App - createUser Service error\n: ${err.message}`);
-        return errResponse(baseResponse.DB_ERROR);
+        return errResponse({ 
+            "isSuccess": false, 
+            "code": 0, 
+            "message":`DB 에러:${err.message}` 
+        });
     }
 };
 

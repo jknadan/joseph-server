@@ -85,9 +85,11 @@ exports.postUsers = async function (req, res) {
             "message":"전화번호에 특수문자를 포함할 수 없습니다." },));
 
     const signUpResponse = await userService.createUser(
-        email,
-        password,
-        nickname
+        name,
+        group, 
+        phone, 
+        ID, 
+        password
     );
 
     return res.send(signUpResponse);
