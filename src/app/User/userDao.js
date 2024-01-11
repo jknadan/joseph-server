@@ -32,7 +32,7 @@ async function selectUserId(connection, userId) {
 
 // 유저 생성
 async function insertUserInfo(connection, insertUserInfoParams) {
-  
+
   const insertUserInfoQuery = `
     INSERT INTO User(Name, ID, Password, PhoneNumber, GroupNum) 
     VALUES (?,?,?,?,?);
@@ -81,6 +81,17 @@ async function updateUserInfo(connection, id, nickname) {
   return updateUserRow[0];
 }
 
+async function checkUserLoginInfo(connection, ID, password){
+  const checkUserInfoQuery = `
+  select UserID 
+  from User 
+  where ID= ? and Password = ?;
+  `;
+  const userInfoResult = await connection.query(checkUserInfoQuery,[ID,password]);
+  return userInfoResult[0];
+
+}
+
 
 module.exports = {
   selectUser,
@@ -90,4 +101,5 @@ module.exports = {
   selectUserPassword,
   selectUserAccount,
   updateUserInfo,
+  checkUserLoginInfo
 };

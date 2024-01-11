@@ -95,6 +95,30 @@ exports.postUsers = async function (req, res) {
     return res.send(signUpResponse);
 };
 
+
+exports.userLogin = async function(req,res){
+
+    const {ID, password} = req.body;
+    console.log(ID, password)
+
+    // 빈 값 체크
+if (!ID) return res.send(errResponse({
+    "isSuccess": false,
+    "code": 0,
+    "message": "아이디를 입력해주세요"
+},));
+if (!password) return res.send(errResponse({
+    "isSuccess": false,
+    "code": 0,
+    "message": "비밀번호를 입력해주세요"
+},));
+
+const responseLoginInfo = userProvider.userLogin(ID,password);
+
+return responseLoginInfo;
+
+}
+
 /**
  * API No. 2
  * API Name : 유저 조회 API (+ 이메일로 검색 조회)
