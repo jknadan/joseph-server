@@ -11,6 +11,8 @@ module.exports = function(app){
     // 2. 유저 조회 API (+ 검색)
     app.get('/app/users',user.getUsers); 
 
+
+    // 3. 유저 로그인
     app.post('/login', user.userLogin);
 
     // 3. 특정 유저 조회 API

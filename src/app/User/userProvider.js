@@ -64,6 +64,8 @@ exports.accountCheck = async function (email) {
 exports.userLogin = async function(ID,password){
   const connection = await pool.getConnection(async (conn)=>conn);
 
+  console.log("JWT 토큰 생성해야해요. 로그인 했어요")
+
   const hashedPassword = await crypto
   .createHash("sha512")
   .update(password)
