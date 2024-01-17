@@ -115,9 +115,10 @@ if (!password)
      "message": "비밀번호를 입력해주세요"
 },));
 
-const responseLoginInfo = await userProvider.userLogin(ID,password);
-console.log(responseLoginInfo)
+const responseLoginInfo = await userService.userLogin(ID,password);
+console.log(responseLoginInfo);
 
+//res.send 추가
 return res.send(responseLoginInfo);
 
 }
@@ -173,7 +174,7 @@ exports.getUserById = async function (req, res) {
  */
 exports.login = async function (req, res) {
 
-    const {email, password} = req.body;
+    const {ID, password} = req.body;
 
     // TODO: email, password 형식적 Validation
 

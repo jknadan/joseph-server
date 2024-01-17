@@ -46,11 +46,11 @@ exports.createUser = async function (name, group, phone, ID, password) {
     }
 };
 
-
+/** 
 // TODO: After 로그인 인증 방법 (JWT)
-exports.postSignIn = async function (email, password) {
+exports.postSignIn = async function (ID, password) {
     try {
-        // 이메일 여부 확인
+        // ID 여부 확인
         const emailRows = await userProvider.emailCheck(email);
         if (emailRows.length < 1) return errResponse(baseResponse.SIGNIN_EMAIL_WRONG);
 
@@ -62,23 +62,11 @@ exports.postSignIn = async function (email, password) {
             .update(password)
             .digest("hex");
 
-        const selectUserPasswordParams = [selectEmail, hashedPassword];
-        const passwordRows = await userProvider.passwordCheck(selectUserPasswordParams);
+        const loginInfoParams = [ID,hashedPassword]
 
         if (passwordRows[0].password !== hashedPassword) {
             return errResponse(baseResponse.SIGNIN_PASSWORD_WRONG);
         }
-
-        // 계정 상태 확인
-        const userInfoRows = await userProvider.accountCheck(email);
-
-        if (userInfoRows[0].status === "INACTIVE") {
-            return errResponse(baseResponse.SIGNIN_INACTIVE_ACCOUNT);
-        } else if (userInfoRows[0].status === "DELETED") {
-            return errResponse(baseResponse.SIGNIN_WITHDRAWAL_ACCOUNT);
-        }
-
-        console.log(userInfoRows[0].id) // DB의 userId
 
         //토큰 생성 Service
         let token = await jwt.sign(
@@ -99,7 +87,7 @@ exports.postSignIn = async function (email, password) {
         return errResponse(baseResponse.DB_ERROR);
     }
 };
-
+**/
 exports.editUser = async function (id, nickname) {
     try {
         console.log(id)
@@ -114,3 +102,48 @@ exports.editUser = async function (id, nickname) {
         return errResponse(baseResponse.DB_ERROR);
     }
 }
+
+// 유저 로그인 Logic
+exports.userLogin = async function(ID,password){
+    const connection = await pool.getConnection(async (conn)=>conn);
+  
+    console.log("JWT 토큰 생성해야해요. 로그인 했어요");
+    
+  
+    const hashedPassword = await crypto
+    .createHash("sha512")
+    .update(password)
+    .digest("hex");
+  
+  
+    const [checkUserInfo] = await userDao.checkUserLoginInfo(connection,ID,hashedPassword);
+    console.log(checkUserInfo.UserID)
+    // console.log(checkUserInfo)
+
+    //토큰 생성 Service
+    let token = await jwt.sign(
+       {
+           userId: checkUserInfo.UserID,
+        }, // 토큰의 내용(payload)
+        secret_config.jwtsecret, // 비밀키
+        {
+            expiresIn: "1h",
+            subject: "userInfo",
+        } // 유효 기간 1시간
+    );
+    /**  refreshToken 저장 Logic
+    let refreshToken = jwt.sign({}, secret_config.jwtsecret, { // refresh token은 payload 없이 발급
+          algorithm: 'HS256',
+          expiresIn: '2h',
+        });
+    
+    const saveRefreshToken = await userDao.saveRefreshToken(connection,refreshToken);
+    console.log(saveRefreshToken);
+    **/
+    connection.release();
+    
+    return response({ "isSuccess": true, "code": 1, "message":"로그인에 성공하였습니다."},{"Access Token":token,});
+  
+  
+  
+  }
