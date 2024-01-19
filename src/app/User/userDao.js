@@ -48,7 +48,7 @@ async function insertUserInfo(connection, insertUserInfoParams) {
 
 async function checkUserLoginInfo(connection, ID, password){
   const checkUserInfoQuery = `
-  select UserID 
+  select UserID,Name
   from User 
   where ID= ? and Password = ?;
   `;

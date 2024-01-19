@@ -117,6 +117,7 @@ exports.userLogin = async function(ID,password){
   
   
     const [checkUserInfo] = await userDao.checkUserLoginInfo(connection,ID,hashedPassword);
+    console.log(checkUserInfo)
     console.log(checkUserInfo.UserID)
     // console.log(checkUserInfo)
 
@@ -124,6 +125,7 @@ exports.userLogin = async function(ID,password){
     let token = await jwt.sign(
        {
            userId: checkUserInfo.UserID,
+           name: checkUserInfo.Name
         }, // 토큰의 내용(payload)
         secret_config.jwtsecret, // 비밀키
         {
@@ -142,7 +144,7 @@ exports.userLogin = async function(ID,password){
     **/
     connection.release();
     
-    return response({ "isSuccess": true, "code": 1, "message":"로그인에 성공하였습니다."},{"Access Token":token,});
+    return response({ "isSuccess": true, "code": 1, "message":"로그인에 성공하였습니다."},{"Access Token":token});
   
   
   
