@@ -122,7 +122,7 @@ exports.userLogin = async function(ID,password){
     // console.log(checkUserInfo)
 
     //토큰 생성 Service
-    let token = await jwt.sign(
+    let accessToken = await jwt.sign(
        {
            userId: checkUserInfo.UserID,
            name: checkUserInfo.Name
@@ -133,19 +133,28 @@ exports.userLogin = async function(ID,password){
             subject: "userInfo",
         } // 유효 기간 1시간
     );
-    /**  refreshToken 저장 Logic
-    let refreshToken = jwt.sign({}, secret_config.jwtsecret, { // refresh token은 payload 없이 발급
+
+    // refreshToken 저장 Logic
+    let refreshToken = jwt.sign(
+        {}, 
+        secret_config.jwtsecret, 
+        { // refresh token은 payload 없이 발급
           algorithm: 'HS256',
           expiresIn: '2h',
         });
+    // Refresh Token 저장
+    const saveRefreshToken = await userDao.saveRefreshToken(connection,[refreshToken,checkUserInfo.UserID]);
     
-    const saveRefreshToken = await userDao.saveRefreshToken(connection,refreshToken);
-    console.log(saveRefreshToken);
-    **/
     connection.release();
     
-    return response({ "isSuccess": true, "code": 1, "message":"로그인에 성공하였습니다."},{"Access Token":token});
-  
-  
-  
+    return response({ 
+        "isSuccess": true, 
+        "code": 1, 
+        "message":"로그인에 성공하였습니다."
+    },
+        {
+            "AccessToken":accessToken, 
+            "RefreshToken":refreshToken
+        });
+
   }

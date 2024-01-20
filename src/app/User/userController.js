@@ -184,6 +184,13 @@ exports.login = async function (req, res) {
 };
 
 
+// API No 5. 
+// API Name: Refresh Token 유효성 검증
+exports.verifyRefreshToken = async function (req,res){
+    
+}
+
+
 /**
  * API No. 5
  * API Name : 회원 정보 수정 API + JWT + Validation

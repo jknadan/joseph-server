@@ -57,12 +57,14 @@ async function checkUserLoginInfo(connection, ID, password){
 
 }
 
-async function saveRefreshToken(connection,refreshToken){
+async function saveRefreshToken(connection,updateInfo){
   const saveRefreshTokenQuery = `
-  INSERT INTO User(RefreshToken) VALUES (?);
+    UPDATE User 
+    SET RefreshToken = ? 
+    Where UserID = ?;
   `;
 
-  const userSaveInfo = await connection.query(saveRefreshTokenQuery,refreshToken);
+  const userSaveInfo = await connection.query(saveRefreshTokenQuery,updateInfo);
   return userSaveInfo[0];
 }
 
