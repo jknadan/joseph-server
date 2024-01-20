@@ -61,23 +61,3 @@ exports.accountCheck = async function (email) {
   return userAccountResult;
 };
 
-exports.userLogin = async function(ID,password){
-  const connection = await pool.getConnection(async (conn)=>conn);
-
-  console.log("JWT 토큰 생성해야해요. 로그인 했어요")
-
-  const hashedPassword = await crypto
-  .createHash("sha512")
-  .update(password)
-  .digest("hex");
-
-
-  const checkUserInfo = await userDao.checkUserLoginInfo(connection,ID,hashedPassword);
-  console.log(checkUserInfo)
-  connection.release();
-  
-  return response({ "isSuccess": true, "code": 1, "message":"로그인에 성공하였습니다." });;
-
-
-
-}
