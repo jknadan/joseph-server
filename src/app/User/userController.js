@@ -187,6 +187,7 @@ exports.login = async function (req, res) {
 // API No 5. 
 // API Name: Refresh Token 유효성 검증
 exports.verifyRefreshToken = async function (req,res){
+    // 헤더에서 refreshToken 꺼내기
     
 }
 
