@@ -14,6 +14,9 @@ module.exports = function(app){
     // 3. 유저 로그인
     app.post('/login', user.userLogin);
 
+    // 4. JWT 토큰 검증 API
+    app.get('/verifingToken', user.verifyRefreshToken);
+
     // 3. 특정 유저 조회 API
     app.get('/app/users/:userId', user.getUserById);
 
